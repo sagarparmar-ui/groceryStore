@@ -1,0 +1,135 @@
+﻿@model RMS.Models.Product
+@using System.Security.Claims
+
+@{
+    ViewData["Title"] = "Delete Product";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <div class="card">
+        <div class="card-header d-flex">
+            <h5 class="mx-auto my-3"><strong">@ViewData["Title"]</strong></h5>
+
+        </div>
+        <div class="card-body">
+            <form>
+
+                <div class="row">
+                    <div class="col-md-5">
+
+                        <!--Photo-->
+                        <div class="d-flex justify-content-center align-items-sm-center m-5 border border-info">
+                            <img src="@Url.Content(Model.ProductImage)"
+                                 alt="building-img"
+                                 class="d-block rounded"
+                                 height="200"
+                                 width="200"
+                                 id="product-pic" />
+                        </div>
+
+                        <!--Name-->
+                        <h5 class="d-flex justify-content-center">
+                            <strong>@Model.Name</strong>
+                        </h5>
+
+                        <!--Buttons-->
+                        <div class="d-flex justify-content-center mx-4 ">
+                            @if (User.Identity?.IsAuthenticated == true && User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Customer"))
+                            {
+                                <a href="#" type="submit" class="btn btn-success">
+                                    <span class="tf-icons bx bx-book-add"></span>&nbsp;Book
+                                </a>
+                            }
+                            else
+                            {
+                                <a class="btn btn-danger" href="/Products/DeleteConfirm?Id=@Model.Id">
+                                    <span class="tf-icons bx bx-trash"></span>&nbsp;Delete
+                                </a>
+                            }
+@*                             <a asp-controller="Products" asp-action="ProductList" class="btn btn-outline-secondary">
+                                <span class="tf-icons bx bx-right-arrow-alt"></span>&nbsp;Back
+                            </a> *@
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-7">
+                        <!--About Section-->
+                        <div class="text-muted fw-light">
+                            About
+                            <hr />
+                        </div>
+
+                        <div class="mb-3">
+                            <!--Basic Information-->
+                            <div class="fw-bold">Basic Information</div>
+                            <div class="row">
+
+                                <div class="col-sm-3">Seller:</div>
+                                <div class="col-sm-9">@Model.Seller</div>
+
+                                <div class="col-sm-3">Price/Day:</div>
+                                <div class="col-sm-9">@Model.Price</div>
+
+                                <div class="col-sm-3">Categories:</div>
+
+                                @if (Model.Services?.Count() > 0)
+                                {
+                                    for (var i = 0; i < Model.Services.Count(); i++)
+                                    {
+                                        <div class="col-sm-3">@Model.Services[i].Name</div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="col-sm-9">Product Seller has not provided with any Categories.</div>
+                                }
+
+                            </div>
+
+                            <!--Contact Information-->
+                            <div class="fw-bold my-2">Contact Information</div>
+                            <div class="row">
+                                
+                                <div class="col-sm-3">Phone no:</div>
+                                <div class="col-sm-9 mb-1">@Model.Phoneno</div>
+
+                                <div class="col-sm-3">Email:</div>
+                                <div class="col-sm-9 mb-1">@Model.Email</div>
+
+                                <div class="col-sm-3">Location:</div>
+                                <div class="col-sm-9 mb-1">@Model.Location</div>
+
+                            </div>
+
+                            <div class="row">
+                                <!--Description-->
+                                <div class="col-sm-4 fw-bold mt-2">Description</div>
+                                <div class="col-sm-8"></div>
+
+                                <div class="col-sm-3"></div>
+                                <div class="col-sm-9">
+
+                                    @if (Model.Description != null)
+                                    {
+                                        @Model.Description
+                                    }
+                                    else
+                                    {
+                                        <p>No Description Provided.</p>
+                                    }
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</div>

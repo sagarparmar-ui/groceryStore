@@ -1,0 +1,129 @@
+﻿@model X.PagedList.IPagedList<RMS.Models.Product>
+@using System.Security.Claims;
+@using X.PagedList.Mvc.Core;
+@using X.PagedList.Web.Common;
+
+@{
+    ViewData["Title"] = "Product List";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <div class="row d-flex justify-content-between">
+
+        @if (User.Identity?.IsAuthenticated == true && User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Admin"))
+        {
+            <div class="col-md-3 mb-2">
+                <a asp-controller="Products" asp-action="AddProduct" class="btn btn-info mx-4">
+                    <span class="tf-icons bx bx-add-to-queue"></span>&nbsp;Add Product
+                </a>
+            </div>
+        }
+    </div>
+
+    <!-- Cards -->
+    <div class="row">
+
+        <partial name="_Alerts" />
+
+        @if (!Model.Any())
+        {
+            @if (User.Identity?.IsAuthenticated == true && User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Admin"))
+            {
+                <div class="col-12">
+                    <p>You Have not added any Product yet.</p>
+                </div>
+            }
+            else
+            {
+                <div class="col-12">
+                    <p>No Product available at the moment. Check again later.</p>
+                </div>
+            }
+        }
+
+        @for (var i = 0; i < Model.Count; i++)
+        {
+            var product = Model[i];
+
+            <div class="col-md-6 col-lg-4 mb-3">
+                <div class="card h-100">
+                    <!-- Product Image -->
+                    <div class="ratio ratio-1x1">
+                        <img src="@Url.Content(product.ProductImage)" alt="@product.Name" class="img-fluid card-img-top">
+                    </div>
+
+                    <div class="card-body">
+                        <!--Product info-->
+                        <div class="d-flex justify-content-between">
+                            <h5 class="card-title nameFilter"><span class="tf-icons bx bx-building"></span>&nbsp;@product.Name</h5>
+                            <span class="card-text"><span class="tf-icons bx bx-wallet"></span>&nbsp;@product.Price@product.PriceType</span>
+                        </div>
+                        <p class="card-text locationFilter"><span class="tf-icons bx bxs-map-pin"></span>&nbsp;@product.Location</p>
+
+                        <!--Product Modification Buttons-->
+                        @if (User.Identity?.IsAuthenticated == true && User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Customer"))
+                        {
+                            <div class="d-flex justify-content-around btn-group">
+                                <a class="btn btn-outline-info" href="/Products/Details?Id=@product.Id">
+                                    <span class="tf-icons bx bx-detail"></span>&nbsp;Details
+                                </a>
+                                <a class="btn btn-primary" href="/ShoppingCarts/Create?Id=@product.Id">
+                                    <span class="tf-icons bx bx-cart-add"></span>&nbsp;Add to Cart
+                                </a>
+                            </div>
+                        }
+                        else if (User.Identity?.IsAuthenticated == true && User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Admin"))
+                        {
+                            <div class="btn-group" role="group">
+                                <!-- Details Button -->
+                                <a class="btn btn-outline-info" href="/Products/Details?Id=@product.Id">
+                                    Details
+                                </a>
+
+                                <!-- Edit Button -->
+                                <a class="btn btn-outline-warning" href="/Products/Edit?Id=@product.Id">
+                                    Edit
+                                </a>
+
+                                <!-- Delete Button -->
+                                <a class="btn btn-outline-danger" href="/Products/Delete?Id=@product.Id">
+                                    Delete
+                                </a>
+
+                                <!-- Toggle ServiceCheckbox -->
+@*                                 <label class="btn btn-sm border-primary @(product.AllowShoppingCarts ? "active" : "")">
+                                    <input type="checkbox" class="toggle-service-checkbox" id="Product_@i"
+                                           data-product-id="@product.Id" @(product.AllowShoppingCarts ? "checked" : "")>
+                                    Active
+                                </label> *@
+                            </div>
+                        }
+                        else
+                        {
+
+                        }
+
+                    </div>
+                </div>
+            </div>
+        }
+
+
+        @if (Model.Count() > 0)
+        {
+            <!-- Render pagination controls -->
+            <div class="pagination-container d-flex justify-content-center">
+                @Html.PagedListPager(Model, page => Url.Action("Hotel", new { page }), new PagedListRenderOptions() {
+            LiElementClasses = new[] { "page-item" },
+            PageClasses = new[] { "page-link" },
+            UlElementClasses = new[] { "pagination" },
+            DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+            DisplayLinkToLastPage = PagedListDisplayMode.Always
+            })
+            </div>
+        }
+
+    </div>
+
+</div>

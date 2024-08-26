@@ -1,0 +1,73 @@
+﻿@model Grocery_Store.ViewModels.CheckoutVM
+@using System.Security.Claims
+
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <!-- Bordered Table -->
+
+    <partial name="_Alerts" />
+
+    <div class="card">
+        <form asp-action="Checkout" asp-controller="ShoppingCarts" method="post" class="needs-validation" novalidate>
+            <div class="modal-body">
+                <input asp-for="Id" value="@Model.Id" hidden />
+                <div class="row justify-content-center">
+                    <div class="col-md-3 mb-2">
+                        <label class="form-label" for="paymentType">Payment Type</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" asp-for="PaymentType" id="cashOnDelivery" value="CashOnDelivery">
+                            <label class="form-check-label" asp-for="PaymentType">
+                                Cash on Delivery
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" asp-for="PaymentType" id="cardPayment" value="Card">
+                            <label class="form-check-label" asp-for="PaymentType">
+                                Card
+                            </label>
+                        </div>
+                        <span asp-validation-for="PaymentType" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col mb-2">
+                        <label asp-for="Name" class="form-label">Name</label>
+                        <input asp-for="Name" id="nameSmall" class="form-control" placeholder="Enter Name">
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="col mb-2">
+                        <label asp-for="CardNumber" class="form-label">Card Number</label>
+                        <input asp-for="CardNumber" type="text" class="form-control" id="cardNumber" placeholder="Enter Card Number">
+                        <span asp-validation-for="CardNumber" class="text-danger"></span>
+                    </div>
+                    
+                </div>
+
+                <div class="row">
+                    
+                    <div class="col mb-0">
+                        <label asp-for="CVV" class="form-label">CVV</label>
+                        <input asp-for="CVV" type="text" class="form-control" id="cvv" placeholder="Enter CVV">
+                        <span asp-validation-for="CVV" class="text-danger"></span>
+                    </div>
+                    <div class="col mb-0">
+                        <label asp-for="ExpiryDate" class="form-label">Expiry Date</label>
+                        <input id="expiryDate" asp-for="ExpiryDate" type="date" class="form-control">
+                        <span asp-validation-for="ExpiryDate" class="text-danger"></span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer row justify-content-around">
+                <button type="submit" class="btn btn-success col-md-3">CheckedOut</button>
+            </div>
+        </form>
+
+    </div>
+</div>

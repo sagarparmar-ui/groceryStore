@@ -1,0 +1,108 @@
+@model RMS.Models.User
+@{
+    ViewData["Title"] = "Profile";
+}
+@using System.Security.Claims;
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <partial name="_Alerts" />
+
+    <div class="card">
+
+        <div class="card-header d-flex">
+            <h5 class="mx-auto my-1"><strong class="display-6">My Profile</strong></h5>
+
+        </div>
+
+        <div class="card-body">
+            <form>
+                <div class="row">
+
+                    <div class="col-md-5">
+
+                        <!--Photo-->
+                        <div class="d-flex justify-content-center align-items-sm-center m-4">
+                            @if (User.Identity?.IsAuthenticated == true && User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Admin"))
+                            {
+                                <img src="~/assets/img/avatars/default-user.png" alt=""
+                                     alt="User-Image"
+                                     class="d-block rounded"
+                                     height="180"
+                                     width="180"
+                                     id="User-pic" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content(Model.ProfilePic)"
+                                     alt="User-Image"
+                                     class="d-block rounded"
+                                     height="180"
+                                     width="180"
+                                     id="User-pic" />
+                            }
+                        </div>
+
+                        <!--User Type-->
+                        <h5 class="d-flex justify-content-center text-info">
+                            <b class="display-6">@Model.UserType</b>
+                        </h5>
+
+                    </div>
+
+                    <div class="col-md-5 my-3">
+                        <!--About Section-->
+                        <div class="text-muted fw-light">
+                            About
+                            <hr />
+                        </div>
+
+                        <div class="mb-3">
+                            <!--Basic Information-->
+@*                             <div class="fw-bold">Basic Information</div>
+ *@                            <div class="row">
+
+                                <div class="col-sm-3">Name:</div>
+                                <div class="col-sm-9">@Model.FName @Model.LName</div>
+
+                                <div class="col-sm-3">Gender:</div>
+                                <div class="col-sm-9">@Model.Gender</div>
+
+                            </div>
+
+                            <!--Contact Information-->
+@*                             <div class="fw-bold mt-2">Contact Details</div>
+ *@                            <div class="row">
+
+                                <div class="col-sm-3">Phone no:</div>
+                                <div class="col-sm-9 mb-1">@Model.Phoneno</div>
+
+                                <div class="col-sm-3">Email:</div>
+                                <div class="col-sm-9 mb-1">@Model.Email</div>
+
+                                <div class="col-sm-3">Address:</div>
+                                <div class="col-sm-9 mb-1">@Model.Address</div>
+
+                            </div>
+
+                            <!--Buttons-->
+                            <div class="d-flex justify-content-around my-2">
+                                <a asp-controller="Users" asp-action="Update" class="btn btn-outline-info">
+                                    Update
+                                </a>
+                                <a href="/Users/Delete?id=@Model.Id" class="btn btn-outline-danger mx-4">
+                                    Delete Account</a>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+</div>

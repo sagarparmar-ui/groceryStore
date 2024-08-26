@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html lang="en"
+      class="light-style layout-menu-fixed"
+      dir="ltr"
+      data-theme="theme-default"
+      data-assets-path="../assets/"
+      data-template="vertical-menu-template-free">
+
+<head>
+    <!-- Head elements partial view -->
+    <partial name="_1-PageHeadElement" />
+    <!-- / Head elements partial view -->
+</head>
+<body>
+
+    <!-- Loader -->
+@*     <div id="loader" class="spinner-border text-primary position-fixed top-50 start-50 zindex-5" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div> *@
+
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar">
+
+        <div class="layout-container">
+
+            <!-- Side Menu Partial view -->
+            <partial name="_2-Sidenav" />
+            <!-- / Side Menu Partial view -->
+
+            <!-- Page Content wrapper -->
+            <div class="layout-page">
+
+                <!-- Top Navbar -->
+                <partial name="_3-Topnav" />
+                <!-- / Top Navbar -->
+                <!-- Content wrapper -->
+                <div class="content-wrapper">
+                    <!-- Main content page -->
+                    @RenderBody()
+                    <!-- / Main content page -->
+                    <!-- Footer Partial view -->
+                    <partial name="_4-Footer" />
+                    <!-- / Footer Partial view -->
+
+                    <div class="content-backdrop fade"></div>
+                </div>
+                <!-- Content wrapper -->
+            </div>
+            <!-- / Page Content wrapper -->
+
+        </div>
+
+        <!-- Overlay of Menu selected option-->
+        <div class="layout-overlay layout-menu-toggle"></div>
+        <!-- / Overlay of Menu selected option-->
+
+    </div>
+    <!-- / Layout wrapper -->
+    <!-- Partial view Containing all scripts -->
+    <partial name="_5-ThemeScripts" />
+    <!-- / Partial view Containing all scripts -->
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

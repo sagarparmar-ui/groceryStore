@@ -1,0 +1,155 @@
+﻿@using System.Security.Claims;
+
+@*Getting values of curent controller and action method.*@
+@{
+    string controller = ViewContext.RouteData.Values["controller"]?.ToString() ?? string.Empty;
+    string action = ViewContext.RouteData.Values["action"]?.ToString() ?? string.Empty;
+}
+<!-- Menu -->
+<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+
+    <div>
+        <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
+            <i class="bx bx-chevron-left bx-sm align-middle"></i>
+        </a>
+
+    </div>
+
+    <div class="menu-inner-shadow"></div>
+
+    <ul class="menu-inner py-1">
+        <!-- Dashboard -->
+        <li class="menu-item mt-5
+            @(controller == "Home" && action == "Index" ? "active" : "")"
+            id="dashboard">
+
+            <a class="menu-link" asp-controller="Home" asp-action="Index">
+                <div data-i18n="Analytics">Dashboard</div>
+            </a>
+        </li>
+        <!-- / Dashboard -->
+        @if (User.Identity?.IsAuthenticated == false)
+        {
+            <!--Authentication  heading-->
+            <li class="menu-header small text-uppercase">
+                <span class="menu-header-text">Authenticaion</span>
+            </li>
+            <!--Authentication  heading-->
+            <!--Register-->
+            <li class="menu-item">
+                <a asp-controller="Users" asp-action="Register"
+                   class="menu-link">
+                    <div data-i18n="Register">Register</div>
+                </a>
+            </li>
+            <!--Register-->
+            <!--Login-->
+            <li class="menu-item">
+                <a asp-controller="Users" asp-action="Login"
+                   class="menu-link">
+                    <div data-i18n="Login">Login</div>
+                </a>
+            </li>
+            <!--Login-->
+        }
+
+        @if (User.Identity?.IsAuthenticated == true && User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Admin"))
+        {
+            <!--User List-->
+            <li class="menu-item
+            @(controller == "Users" && action == "UserList" ? "active" : "")">
+
+                <a asp-controller="Users" asp-action="UserList"
+                   class="menu-link">
+                    <div data-i18n="UserList">Users</div>
+                </a>
+            </li>
+            <!--User List-->
+            <!--ShoppingCart List -->
+            <li class="menu-item
+            @(controller == "ShoppingCarts" && action == "ShoppingCartList" ? "active" : "")">
+
+                <a asp-controller="ShoppingCarts" asp-action="ShoppingCartList"
+                   class="menu-link">
+                    <div data-i18n="ShoppingCartList">Order List</div>
+                </a>
+            </li>
+            <!--ShoppingCart List-->
+        }
+
+        @if (User.Identity?.IsAuthenticated == true && User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Customer"))
+        {
+            <!--Customer ServiceList-->
+            <li class="menu-item
+            @(controller == "ShoppingCarts" && action == "CustomerShoppingCartList" ? "active" : "")">
+
+                <a asp-controller="ShoppingCarts" asp-action="CustomerShoppingCartList"
+                   class="menu-link">
+                    <div data-i18n="CustomerShoppingCartList">My ShoppingCart</div>
+                </a>
+            </li>
+            <!--Customer ServiceList-->
+        }
+
+        @if (User.Identity?.IsAuthenticated == true && User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value == "Seller"))
+        {
+            <!--Seller ServiceList-->
+            <li class="menu-item
+            @(controller == "ShoppingCarts" && action == "SellerShoppingCartList" ? "active" : "")">
+
+                <a asp-controller="ShoppingCarts" asp-action="SellerShoppingCartList"
+                   class="menu-link">
+                    <div data-i18n="SellerShoppingCartList">My Product Orders</div>
+                </a>
+            </li>
+            <!--Seller ServiceList-->
+            <!--Seller Products List-->
+            <li class="menu-item
+            @(controller == "Products" && action == "SellerProductList" ? "active" : "")">
+
+                <a asp-controller="Products" asp-action="SellerProductList"
+                   class="menu-link">
+                    <div data-i18n="SellerProductList">My Products</div>
+                </a>
+            </li>
+            <!--Seller Products List-->
+        }
+
+        <!--Product List-->
+        <li class="menu-item
+            @(controller == "Products" && action == "ProductList" ? "active" : "")">
+
+            <a asp-controller="Products" asp-action="ProductList"
+               class="menu-link">
+                <div data-i18n="ProductList">Product List</div>
+            </a>
+        </li>
+        <!--Product List-->
+
+        <!--About us-->
+        <li class="menu-item
+            @(controller == "Home" && action == "Aboutus" ? "active" : "")"
+            id="aboutus">
+
+            <a asp-controller="Home" asp-action="Aboutus"
+               class="menu-link">
+                <div data-i18n="About us">About us</div>
+            </a>
+        </li>
+        <!--About us-->
+
+        <!--Help-->
+        <!--Privacy Policy-->
+        <li class="menu-item
+            @(controller == "Home" && action == "PrivacyPolicy" ? "active" : "")"
+            id="help">
+
+            <a asp-controller="Home" asp-action="PrivacyPolicy"
+               class="menu-link">
+                <div data-i18n="Help">Privacy Policy</div>
+            </a>
+        </li>
+        <!--Privacy Policy-->
+    </ul>
+</aside>
+<!-- / Menu -->

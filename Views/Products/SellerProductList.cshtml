@@ -1,0 +1,98 @@
+﻿@model X.PagedList.IPagedList<RMS.Models.Product>
+@using System.Security.Claims;
+@using X.PagedList.Mvc.Core;
+@using X.PagedList.Web.Common;
+
+@{
+    ViewData["Title"] = "My Products";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <div class="d-flex justify-content-between">
+        <div class="d-flex align-items-center mb-2">
+            @if (User.Identity?.IsAuthenticated == true && User.HasClaim(c => c.Type == ClaimTypes.Role && c.Value != "Customer"))
+            {
+                <a asp-controller="Products" asp-action="AddProduct" class="btn btn-info">
+                    <span class="tf-icons bx bx-add-to-queue"></span>&nbsp;Add Product
+                </a>
+            }
+        </div>
+    </div>
+
+    <!-- Cards -->
+    <div class="row mb-5">
+
+        <partial name="_Alerts" />
+
+        @if (!Model.Any())
+        {
+            <div class="col-12">
+                <p>You have not added any products yet.</p>
+            </div>
+        }
+
+        @for (var i = 0; i < Model.Count; i++)
+        {
+            var product = Model[i];
+
+            <div class="col-md-6 col-lg-4 mb-3">
+                <div class="card h-100">
+                    <!-- Product Image -->
+                    <div class="ratio ratio-1x1">
+                        <img src="@Url.Content(product.ProductImage)" alt="@product.Name" class="img-fluid card-img-top">
+                    </div>
+
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h5 class="card-title nameFilter"><span class="tf-icons bx bx-building"></span>&nbsp;@product.Name</h5>
+                            <span class="card-text"><span class="tf-icons bx bx-wallet"></span>&nbsp;@product.Price@product.PriceType</span>
+                        </div>
+                        <p class="card-text locationFilter"><span class="tf-icons bx bxs-map-pin"></span>&nbsp;@product.Location</p>
+
+                        <!--Buttons-->
+                        <div class="btn-group" role="group">
+                            <!-- Details Button -->
+                            <a class="btn btn-outline-info" href="/Products/Details?Id=@product.Id">
+                                Details
+                            </a>
+
+                            <!-- Edit Button -->
+                            <a class="btn btn-outline-warning" href="/Products/Edit?Id=@product.Id">
+                                Edit
+                            </a>
+
+                            <!-- Delete Button -->
+                            <a class="btn btn-outline-danger" href="/Products/Delete?Id=@product.Id">
+                                Delete
+                            </a>
+
+                            <!-- Toggle ServiceCheckbox -->
+@*                             <label class="btn btn-sm border-primary @(product.AllowShoppingCarts ? "active" : "")">
+                                <input type="checkbox" class="toggle-service-checkbox" id="Product_@i"
+                                       data-product-id="@product.Id" @(product.AllowShoppingCarts ? "checked" : "")>
+                                Active
+                            </label> *@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (Model.Count() > 0)
+        {
+            <!-- Render pagination controls -->
+            <div class="pagination-container d-flex justify-content-center">
+                @Html.PagedListPager(Model, page => Url.Action("Hostel", new { page }), new PagedListRenderOptions() {
+            LiElementClasses = new[] { "page-item" },
+            PageClasses = new[] { "page-link" },
+            UlElementClasses = new[] { "pagination" },
+            DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+            DisplayLinkToLastPage = PagedListDisplayMode.Always
+            })
+            </div>
+        }
+
+    </div>
+
+</div>

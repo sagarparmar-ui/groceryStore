@@ -1,0 +1,174 @@
+﻿@model IEnumerable<RMS.Models.ShoppingCart>
+@using System.Security.Claims
+
+@{
+    ViewData["Title"] = "Orders List";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <!-- Bordered Table -->
+    
+    <partial name="_Alerts" />
+
+    <div class="card">
+        <h5 class="card-header">Orders List</h5>
+        <div class="card-body">
+            <div class="table-responsive text-nowrap">
+                <table id="shoppingCart-table" class="table" style="width:100%">
+                    <thead>
+
+                        <tr>
+                            <th>No</th>
+                            <th>Product</th>
+                            <th>Customer</th>
+                            @* <th>Payment Type</th> *@
+                            <th>Customer Ph</th>
+                            <th>Price</th>
+                            @* <th>Ordered On</th> *@
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        @{
+                            int counter = 1;
+                        }
+                        @foreach (var shoppingCart in Model)
+                        {
+                            <tr>
+                                <td class="text-center">
+                                    @counter
+                                </td>
+                                <td>
+                                    @shoppingCart.ProductName
+                                </td>
+                                <td>@shoppingCart.Resident</td>
+                                @* <td>
+                                    @if (shoppingCart.PaymentType == null)
+                                    {
+                                        <span>Not Selected Yet</span>
+                                    }
+                                    else
+                                    {
+                                        <span>@shoppingCart.PaymentType</span>
+                                    }
+                                </td> *@
+                                <td>@shoppingCart.ResidentPhone</td>
+                                <td>
+                                    @shoppingCart.Price@shoppingCart.PriceType
+                                </td>
+                                @* <td class="text-center">
+                                    @if (shoppingCart.Date == DateTime.MinValue)
+                                    {
+                                        <span>Not ordered Yet</span>
+                                    }
+                                    else
+                                    {
+                                        @shoppingCart.Date.ToShortDateString()
+                                    }
+                                </td> *@
+                                <td class="text-center">
+                                    @if (shoppingCart.Status == ShoppingCart.StatusEnum.Pending)
+                                    {
+                                        <span class="me-1">Pending</span>
+                                    }
+                                    else if (shoppingCart.Status == ShoppingCart.StatusEnum.CheckedOut)
+                                    {
+                                        <span class="me-1">Checked Out</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="me-1">Delivered</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="d-flex justify-content-around">
+                                        <a class="btn btn-icon btn-sm btn-outline-success
+                                            @((shoppingCart.Status == ShoppingCart.StatusEnum.CheckedOut) ? "disabled" : "")"
+                                           href="/ShoppingCarts/Checkout?Id=@shoppingCart.Id">
+                                            <span class="tf-icons bx bx-list-check"></span>
+                                        </a>
+                                        
+                                        <a href="/ShoppingCarts/Delete?Id=@shoppingCart.Id" class="btn btn-icon btn-sm btn-outline-danger"
+                                           data-bs-toggle="tooltip"
+                                           data-bs-offset="0,4"
+                                           data-bs-placement="top"
+                                           data-bs-html="true"
+                                           title=""
+                                           data-bs-original-title="<i class='bx bx-list-minus bx-xs'></i> <span>Remove</span>">
+                                            <span class="tf-icons bx bx-list-minus"></span>
+                                        </a>
+                                    </div>
+
+                                </td>
+                            </tr>
+                            counter++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!--/ Bordered Table -->
+    
+</div>
+
+@section scripts {
+ 
+    <script>
+
+        $(document).ready(function () {
+            $('#shoppingCart-table').DataTable({
+                "scrollY": "70vh",
+                "scrollCollapse": true,
+                "scrollX": "auto",
+                "pageLength": -1,
+
+                buttons: {
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            className: 'excelButton btn btn-sm btn-outline-success mb-2',
+                            text: '<i class="fas fa-file-excel"></i> Excel'
+                        },
+                        {
+                            extend: 'pdfHtml5',
+                            className: 'pdfButton btn btn-sm btn-outline-danger mb-2',
+                            text: '<i class="fas fa-file-pdf"></i> PDF'
+                        }
+                    ]
+                },
+                dom: 'Blftip',
+                lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+                
+            });
+
+            $(".pdfButton").click(function () {
+                debugger
+                GetPDF();
+            });
+
+            function GetPDF() {
+                var pdfDoc = {
+                    pageSize: 'A5',
+                    fontSize: 8,
+                    pageOrientation: 'landscape',
+                    margin: [0, 20, 0, 8],
+
+                };
+                pdfMake.createPdf(pdfDoc);
+            }
+
+            // Customizing the pagination button style
+            $('.paginate_button')
+                .removeClass('btn-default')
+                .addClass('btn btn-sm custom-pagination-button my-1')
+                .attr('style', 'background-color: #696cff !important; color: #fff !important;');
+            
+        });
+
+
+    </script>
+}

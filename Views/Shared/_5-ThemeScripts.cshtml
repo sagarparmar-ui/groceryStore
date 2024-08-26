@@ -1,0 +1,126 @@
+﻿<!-- Core JS -->
+<!-- build:js assets/vendor/js/core.js -->
+<script src="~/assets/vendor/libs/jquery/jquery.js"></script>
+<script src="~/assets/vendor/libs/popper/popper.js"></script>
+<script src="~/assets/vendor/js/bootstrap.js"></script>
+<script src="~/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+<script src="~/assets/js/logout-popup.js"></script>
+<script src="~/assets/vendor/js/menu.js"></script>
+<!-- endbuild -->
+
+<!--Font Awesome icons-->
+<script src="https://kit.fontawesome.com/90bfb2f39e.js" crossorigin="anonymous"></script>
+
+<!-- Vendors JS -->
+<script src="~/assets/vendor/libs/apex-charts/apexcharts.js"></script>
+
+<!-- Main JS -->
+<script src="~/assets/js/main.js"></script>
+
+<!-- Page JS -->
+<script src="~/assets/js/dashboards-analytics.js"></script>
+
+<!-- Place this tag in your head or just before your close body tag. -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+
+<script>
+    //Global loader
+    $(window).on('load', function () {
+        // When the window finishes loading
+        $('#loader').fadeOut('fast');
+        $('body').removeClass('blur-effect');
+    });
+
+    $(document).ready(function () {
+
+        //Sliding animation on homepage.
+        $('#Highlight').animate({ 'margin-left': '0px', 'opacity': '100%', 'left': '50px' }, 1500);
+
+        //To get the profile pic of the user logged in
+        $.ajax({
+            url: '/' + currentController + '/GetProfilePicture',
+            method: 'GET',
+            success: function (profilePic) {
+                $('.profile-pic').attr('src', "");
+                $('.profile-pic').attr('src', profilePic);
+            },
+            error: function () {
+                // Handle the error
+                console.log('Error occurred while fetching the profile picture.');
+            }
+        });
+
+        //Every alert will be auto dismissed in * seconds
+        $('.alert').delay(3000).fadeOut('slow');
+
+        //Toggle Serviceof the product
+        $('.toggle-service-checkbox').on('change', function () {
+            var isChecked = $(this).prop('checked');
+            var productId = $(this).data('product-id');
+
+            $.ajax({
+                url: '/Products/ToggleService',
+                type: 'POST',
+                data: { productId: productId, isChecked: isChecked },
+                success: function (response) {
+                    if (response.success) {
+                        location.reload();
+                    }
+                },
+                error: function (error) {
+                    // Handle error, if needed
+                }
+            });
+        });
+
+        //Capture the search input keyup event
+        $('#nameFilterInput, #locationFilterInput').on('keyup', function () {
+            var nameSearchText = $('#nameFilterInput').val().toLowerCase(); // Get the name search text
+            var locationSearchText = $('#locationFilterInput').val().toLowerCase(); // Get the location search text
+
+            // Show/hide the results based on the search text
+            $('.col-md-6').each(function () {
+                var productCard = $(this); // Get the parent card element
+                var nameMatches = false; // Flag to check if name matches
+                var locationMatches = false; // Flag to check if location matches
+
+                // Check if name matches the search text
+                $(this).find('.nameFilter').each(function () {
+                    var productName = $(this).text().toLowerCase(); // Get the product name
+                    if (productName.includes(nameSearchText)) {
+                        nameMatches = true;
+                        return false; // Exit the loop if a match is found
+                    }
+                });
+
+                // Check if location matches the search text
+                $(this).find('.locationFilter').each(function () {
+                    var productLocation = $(this).text().toLowerCase(); // Get the product location
+                    if (productLocation.includes(locationSearchText)) {
+                        locationMatches = true;
+                        return false; // Exit the loop if a match is found
+                    }
+                });
+
+                if (nameMatches && locationMatches) {
+                    productCard.show(); // Show the card if both name and location match the search text
+                } else {
+                    productCard.hide(); // Hide the card if either name or location does not match the search text
+                }
+            });
+        });
+
+        //Checkin Checkout date when serviceproduct
+        $(".chkInOut").click(function () {
+            var checkInDate = $("#checkInDate").val();
+            var checkOutDate = $("#checkOutDate").val();
+            var productId = $(this).data('product-id');
+
+            var url = `/Services/Create?id=${productId}&checkIn=${checkInDate}&checkOut=${checkOutDate}`;
+            window.location.href = url;
+        });
+
+    });
+
+</script>

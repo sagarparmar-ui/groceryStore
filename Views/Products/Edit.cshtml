@@ -1,0 +1,253 @@
+﻿@model RMS.ViewModels.ProductDetailsVM
+@{
+    ViewData["Title"] = "Edit Product";
+}
+
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <div class="card">
+        <div class="card-header d-flex">
+            <h5 class="mx-auto my-3 text-upper"><strong>  @ViewData["Title"] </strong></h5>
+
+        </div>
+        <div class="card-body">
+            <form asp-controller="Products" asp-action="Edit" asp-route-id="@Model.Id" id="sub" method="post" enctype="multipart/form-data">
+                <input type="hidden" asp-for="Id" />
+
+                <div class="row">
+                    <!--Product Name-->
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label" asp-for="Name"></label>
+                        <div class="input-group input-group-merge">
+                            <span id="basic-icon-product-name" class="input-group-text">
+                                <i class='bx bx-building'></i>
+                            </span>
+                            <input asp-for="Name"
+                                   value="@Model.Name"
+                                   class="form-control"
+                                   id="basic-icon-default-fullname"
+                                   placeholder="Pk Resorts"
+                                   aria-label="Pk name"
+                                   aria-describedby="basic-icon-default-product-name" />
+                        </div>
+                        <span asp-validation-for="Name" class="text-danger"></span>
+
+                    </div>
+
+                    <!--Seller Name-->
+                    <div class="col-md-6 mb-3">
+
+                        <label class="form-label" asp-for="Seller"></label>
+                        <div class="input-group input-group-merge">
+                            <span id="basic-icon-product-seller-name" class="input-group-text">
+                                <i class='bx bx-user'></i>
+                            </span>
+                            <input asp-for="Seller"
+                                   value="@Model.Seller"
+                                   class="form-control"
+                                   id="basic-icon-product-seller-name"
+                                   placeholder="John doe"
+                                   aria-label="John doe"
+                                   aria-describedby="basic-icon-default-product-Seller-name" />
+                        </div>
+                        <span asp-validation-for="Seller" class="text-danger"></span>
+
+                    </div>
+
+                    <!--Location-->
+                    <div class="col-lg-6 mb-3">
+                        <label class="form-label" asp-for="Location"></label>
+                        <div class="input-group input-group-merge">
+                            <span id="basic-icon-map-pin" class="input-group-text">
+                                <i class='bx bxs-map-pin'></i>
+                            </span>
+                            <input asp-for="Location"
+                                   value="@Model.Location"
+                                   class="form-control"
+                                   id="basic-icon-location"
+                                   placeholder="Township, Lahore, Pakistan."
+                                   aria-label="Pk Resorts"
+                                   aria-describedby="basic-icon-location" />
+                        </div>
+                        <span asp-validation-for="Location" class="text-danger"></span>
+                    </div>
+
+                    <!--Price-->
+                    <div class="col-md-3 mb-3">
+
+                        <label class="form-label" asp-for="Price"></label>
+                        <div class="input-group input-group-merge">
+                            <span id="basic-icon-product-Price" class="input-group-text">
+                                <i class='bx bx-wallet'></i>
+                            </span>
+                            <input type="number"
+                                   value="@Model.Price"
+                                   class="form-control"
+                                   id="Price"
+                                   name="Price"
+                                   placeholder=" 500"
+                                   aria-label=" 500"
+                                   aria-describedby="basic-icon-product-Price" />
+                        </div>
+                        <span asp-validation-for="Price" class="text-danger"></span>
+
+                    </div>
+
+                    <!--Price Type-->
+                    <div class="col-md-3 mb-3">
+
+                        <label asp-for="PriceType" class="form-label"></label>
+                        <div class="input-group input-group-merge">
+                            <span id="basic-icon-product-seller-name" class="input-group-text">
+                                <i class='bx bx-time'></i>
+                            </span>
+                            <select class="form-select" asp-for="PriceType" aria-label="Select Price Type">
+                                @if (Model.PriceType == "/Kg")
+                                {
+                                    <option selected value="/Kg">Per Kg</option>
+                                    <option value="/Gram">Per Gram</option>
+                                    <option value="/Product">Per Product</option>
+                                }
+                                else if (Model.PriceType == "/Gram")
+                                {
+                                    <option value="/Kg">Per Kg</option>
+                                    <option selected value="/Gram">Per Gram</option>
+                                    <option value="/Product">Per Product</option>
+                                }
+                                else if (Model.PriceType == "/Product")
+                                {
+                                    <option value="/Kg">Per Kg</option>
+                                    <option value="/Gram">Per Gram</option>
+                                    <option selected value="/Product">Per Product</option>
+                                }
+                            </select>
+                        </div>
+                        <span asp-validation-for="PriceType" class="text-danger"></span>
+
+                    </div>
+                </div>
+
+                <!--Categories-->
+                <div class="mb-3">
+                    <div class="mb-3">
+                        <label class="form-label" for="basic-icon-product-services">Categories</label>
+
+                        <div class="row">
+
+                            @for (var i = 0; i < Model.Services?.Count(); i++)
+                            {
+                                <div class="col-md-4">
+                                    <div class="form-check form-switch mb-2">
+                                        <input class="form-check-input check" type="checkbox" name="Services[@i].IsSelected" id="Services[@i].IsSelected" value="true" @(Model.Services[i].IsSelected ? "checked" : "")>
+                                        <input type="hidden" asp-for="@Model.Services[i].ServiceId" />
+                                        <input type="text" asp-for="@Model.Services[i].Name" value="@Model.Services[i].Name" hidden>
+                                        <label class="form-check-label btn btn-outline-primary w-100 text-start" for="Services[@i].IsSelected">
+                                            &nbsp;@Model.Services[i].Name
+                                        </label>
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!--Phone No-->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" asp-for="Phoneno"></label>
+                        <div class="input-group input-group-merge">
+                            <span id="basic-icon-default-phone2" class="input-group-text">
+                                <i class="bx bx-phone"></i>
+                            </span>
+                            <input asp-for="Phoneno"
+                                   value="@Model.Phoneno"
+                                   class="form-control"
+                                   placeholder=" XXX-XXX-XXXX" />
+                        </div>
+                        <div class="form-text">Phone no must be in  XXX-XXX-XXXX format.</div>
+                        <span asp-validation-for="Phoneno" class="text-danger"></span>
+                    </div>
+
+                    <!--Email-->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" asp-for="Email"></label>
+                        <div class="input-group input-group-merge">
+                            <span class="input-group-text"><i class="bx bx-envelope"></i></span>
+                            <input asp-for="Email"
+                                   value="@Model.Email"
+                                   id="basic-icon-default-email"
+                                   class="form-control"
+                                   placeholder="Pk.Resorts@example.com"
+                                   aria-label="Pk.Resorts@example.com"
+                                   aria-describedby="basic-icon-default-email" />
+                            <span id="basic-icon-default-email" class="input-group-text"></span>
+                        </div>
+                        <div class="form-text">You can use letters, numbers & periods</div>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                </div>
+
+                <!--Description-->
+                <div class="mb-3">
+                    <label class="form-label" asp-for="Description"></label>
+                    <div class="input-group input-group-merge">
+                        <span id="basic-icon-default-message2" class="input-group-text">
+                            <i class='bx bxs-detail'></i>
+                        </span>
+                        <textarea id="Description"
+                                  asp-for="Description"
+                                  value="@Model.Description"
+                                  class="form-control"
+                                  placeholder="Write about your Product..."
+                                  aria-label="Write about your Product..."
+                                  aria-describedby="basic-icon-default-description"></textarea>
+                    </div>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="row">
+                    <!--Select Product Image-->
+                    <div class="col-md-9 my-2">
+                        <label asp-for="ProductImage" class="form-label">Select Product Image</label>
+                        <input class="form-control" type="file" asp-for="ProductImage" required>
+                        <span asp-validation-for="ProductImage" class="text-danger"></span>
+                    </div>
+
+                    <!--Product Image Preview-->
+                    <div class="col-md-3 my-2">
+                        <!-- Display the preselected image -->
+                        @if (Model.ProductImage != null)
+                        {
+                            using (var memoryStream = new MemoryStream())
+                            {
+                                Model.ProductImage.CopyTo(memoryStream);
+                                var imageData = memoryStream.ToArray();
+                                <img src="data:image;base64,@Convert.ToBase64String(imageData)"
+                                     alt="Product Image"
+                                     class="d-block rounded"
+                                     height="100"
+                                     width="100" />
+                            }
+                        }
+                    </div>
+                </div>
+
+                <!--Buttons-->
+                <div class="row justify-content-center">
+                    <div class="col-md-6 btn-group my-3">
+                        <button type="submit" class="btn btn-info">
+                            <span class="tf-icons bx bx-save"></span>&nbsp;Save
+                        </button>
+
+                        <a asp-action="ProductList" class="btn btn-outline-secondary w-25 ">
+                            <span class="tf-icons bx bx-right-arrow-alt"></span>&nbsp;Back
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
